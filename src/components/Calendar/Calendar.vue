@@ -4,6 +4,7 @@ import {
   eachDayOfInterval,
   startOfMonth,
   endOfMonth,
+  startOfWeek,
   endOfWeek,
   format,
 } from "date-fns";
@@ -11,8 +12,8 @@ import {
 const today = startOfToday();
 
 const days = eachDayOfInterval({
-  start: startOfMonth(today),
-  end: endOfWeek(endOfMonth(today)),
+  start: startOfWeek(startOfMonth(today), { weekStartsOn: 1 }),
+  end: endOfWeek(endOfMonth(today), { weekStartsOn: 1 }),
 });
 </script>
 
@@ -58,8 +59,20 @@ const days = eachDayOfInterval({
       </button>
     </div>
 
-    <ul class="grid grid-cols-7">
-      <li v-for="day in days">{{ format(day, "dd") }}</li>
-    </ul>
+    <div>
+      <ol class="grid grid-cols-7">
+        <li>M</li>
+        <li>T</li>
+        <li>W</li>
+        <li>T</li>
+        <li>F</li>
+        <li>S</li>
+        <li>S</li>
+      </ol>
+
+      <ul class="grid grid-cols-7">
+        <li v-for="day in days">{{ format(day, "dd") }}</li>
+      </ul>
+    </div>
   </div>
 </template>
