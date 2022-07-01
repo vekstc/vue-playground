@@ -11,6 +11,7 @@ import {
   parse,
   add,
   format,
+  isToday,
 } from "date-fns";
 
 const today = startOfToday();
@@ -98,7 +99,11 @@ const nextMonth = () => {
       </ol>
 
       <ul class="grid grid-cols-7">
-        <li v-for="day in days" class="p-2">
+        <li
+          v-for="day in days"
+          class="p-2"
+          :class="{ 'text-blue-500': isToday(day) }"
+        >
           {{ format(day, "dd") }}
         </li>
       </ul>

@@ -13,4 +13,5 @@ Basic calendar component built for future projects
 - [x] Add change calendar month functionality
   - [x] Do previous month
   - [x] Do next month
-- [ ] Highlight current day
+- [x] Highlight current day
+- [ ] Add dropdown select month and year

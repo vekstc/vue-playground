@@ -35,4 +35,10 @@ describe("Calendar", () => {
 
     expect(wrapper.find("h2").text()).toContain("Aug 2022");
   });
+
+  it("highlights current day", () => {
+    const wrapper = createWrapper();
+
+    expect(wrapper.find(".text-blue-500").text()).toBeTruthy();
+  });
 });
