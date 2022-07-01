@@ -1,7 +1,19 @@
 <script setup lang="ts">
-import { startOfToday, format } from "date-fns";
+import {
+  startOfToday,
+  eachDayOfInterval,
+  startOfMonth,
+  endOfMonth,
+  endOfWeek,
+  format,
+} from "date-fns";
 
 const today = startOfToday();
+
+const days = eachDayOfInterval({
+  start: startOfMonth(today),
+  end: endOfWeek(endOfMonth(today)),
+});
 </script>
 
 <template>
@@ -45,5 +57,9 @@ const today = startOfToday();
         </svg>
       </button>
     </div>
+
+    <ul class="grid grid-cols-7">
+      <li v-for="day in days">{{ format(day, "dd") }}</li>
+    </ul>
   </div>
 </template>

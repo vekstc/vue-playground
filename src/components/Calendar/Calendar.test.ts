@@ -1,5 +1,10 @@
-import { test, expect } from "vitest";
+import { shallowMount } from "@vue/test-utils";
+import Calendar from "./Calendar.vue";
 
-test("true is true", () => {
-  expect(true).toBe(true);
+describe("Calendar", () => {
+  it("displays correct date", () => {
+    const wrapper = shallowMount(Calendar);
+
+    expect(wrapper.text()).toContain("Jul 2022");
+  });
 });
