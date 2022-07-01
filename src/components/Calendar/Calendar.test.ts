@@ -13,4 +13,20 @@ describe("Calendar", () => {
 
     expect(wrapper.findAll("ul > li").length).toBe(35);
   });
+
+  it("changes to previous month", async () => {
+    const wrapper = shallowMount(Calendar);
+    const nextMonthButton = wrapper.find("[data-testid='prevMonth']");
+    await nextMonthButton.trigger("click");
+
+    expect(wrapper.find("h2").text()).toContain("Jun 2022");
+  });
+
+  it("changes to next month", async () => {
+    const wrapper = shallowMount(Calendar);
+    const nextMonthButton = wrapper.find("[data-testid='nextMonth']");
+    await nextMonthButton.trigger("click");
+
+    expect(wrapper.find("h2").text()).toContain("Aug 2022");
+  });
 });

@@ -48,7 +48,7 @@ const nextMonth = () => {
       <h2 class="flex-auto">
         {{ format(firstDayInCurrentMonth, "MMM yyyy") }}
       </h2>
-      <button type="button" @click="prevMonth">
+      <button type="button" @click="prevMonth" data-testid="prevMonth">
         <span class="sr-only">Previous Month</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@ const nextMonth = () => {
           />
         </svg>
       </button>
-      <button type="button" @click="nextMonth">
+      <button type="button" @click="nextMonth" data-testid="nextMonth">
         <span class="sr-only">Next Month</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
