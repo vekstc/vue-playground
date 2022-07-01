@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, computed } from "vue";
+
 import {
   startOfToday,
   eachDayOfInterval,
@@ -6,22 +8,47 @@ import {
   endOfMonth,
   startOfWeek,
   endOfWeek,
+  parse,
+  add,
   format,
 } from "date-fns";
 
 const today = startOfToday();
 
-const days = eachDayOfInterval({
-  start: startOfWeek(startOfMonth(today), { weekStartsOn: 1 }),
-  end: endOfWeek(endOfMonth(today), { weekStartsOn: 1 }),
-});
+const currentMonth = ref(format(today, "MMM-yyyy"));
+const firstDayInCurrentMonth = computed(() =>
+  parse(currentMonth.value, "MMM-yyyy", new Date())
+);
+
+const days = computed(() =>
+  eachDayOfInterval({
+    start: startOfWeek(startOfMonth(firstDayInCurrentMonth.value), {
+      weekStartsOn: 1,
+    }),
+    end: endOfWeek(endOfMonth(firstDayInCurrentMonth.value), {
+      weekStartsOn: 1,
+    }),
+  })
+);
+
+const prevMonth = () => {
+  const firstDay = add(firstDayInCurrentMonth.value, { months: -1 });
+  currentMonth.value = format(firstDay, "MMM-yyyy");
+};
+
+const nextMonth = () => {
+  const firstDay = add(firstDayInCurrentMonth.value, { months: 1 });
+  currentMonth.value = format(firstDay, "MMM-yyyy");
+};
 </script>
 
 <template>
-  <div class="w-[16rem]">
-    <div class="flex items-center">
-      <h2 class="flex-auto">{{ format(today, "MMM yyyy") }}</h2>
-      <button type="button">
+  <div class="w-[16rem] border border-gray-200">
+    <div class="flex items-center p-2">
+      <h2 class="flex-auto">
+        {{ format(firstDayInCurrentMonth, "MMM yyyy") }}
+      </h2>
+      <button type="button" @click="prevMonth">
         <span class="sr-only">Previous Month</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +66,7 @@ const days = eachDayOfInterval({
           />
         </svg>
       </button>
-      <button type="button">
+      <button type="button" @click="nextMonth">
         <span class="sr-only">Next Month</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +87,7 @@ const days = eachDayOfInterval({
     </div>
 
     <div>
-      <ol class="grid grid-cols-7">
+      <ol class="grid grid-cols-7 text-center">
         <li>M</li>
         <li>T</li>
         <li>W</li>
@@ -71,7 +98,9 @@ const days = eachDayOfInterval({
       </ol>
 
       <ul class="grid grid-cols-7">
-        <li v-for="day in days">{{ format(day, "dd") }}</li>
+        <li v-for="day in days" class="p-2">
+          {{ format(day, "dd") }}
+        </li>
       </ul>
     </div>
   </div>

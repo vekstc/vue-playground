@@ -10,7 +10,7 @@ Basic calendar component built for future projects
   - [x] Get days in current month
   - [x] Make monday start first
   - [x] Add previous and next month days
-- [ ] Add change calendar month functionality
-  - [ ] Do previous month
-  - [ ] Do next month
+- [x] Add change calendar month functionality
+  - [x] Do previous month
+  - [x] Do next month
 - [ ] Highlight current day
