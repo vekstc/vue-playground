@@ -42,14 +42,14 @@ const prevMonth = () => {
   const prevMonth = add(firstDayInCurrentMonth.value, { months: -1 });
 
   selectedMonth.value = format(prevMonth, "MMM");
-  selectedYear.value = format(prevMonth, "yyyy");
+  selectedYear.value = parseInt(format(prevMonth, "yyyy"));
 };
 
 const nextMonth = () => {
   const nextMonth = add(firstDayInCurrentMonth.value, { months: 1 });
 
   selectedMonth.value = format(nextMonth, "MMM");
-  selectedYear.value = format(nextMonth, "yyyy");
+  selectedYear.value = parseInt(format(nextMonth, "yyyy"));
 };
 
 const visible = reactive<{ monthDropdown: boolean; yearDropdown: boolean }>({
