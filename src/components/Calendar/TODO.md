@@ -23,3 +23,7 @@ Basic calendar component built for future projects
   - [ ] Make dropdown options keyboard searchable
   - [ ] Make dropdown keyboard accessable
   - [ ] Improve screen reader accessability
+- [ ] Add select date option
+  - [ ] Add single date
+  - [ ] Add multiple date (range selection)
+- [ ] Improve design of calendar
