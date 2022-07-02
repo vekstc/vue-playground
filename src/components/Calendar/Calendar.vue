@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { h, getCurrentInstance, ref, reactive, computed } from "vue";
 
 import {
   startOfToday,
@@ -16,7 +16,13 @@ import {
 
 const today = startOfToday();
 
-const currentMonth = ref(format(today, "MMM-yyyy"));
+const selectedMonth = ref(format(today, "MMM"));
+const selectedYear = ref(format(today, "yyyy"));
+
+const currentMonth = computed(
+  () => `${selectedMonth.value}-${selectedYear.value}`
+);
+
 const firstDayInCurrentMonth = computed(() =>
   parse(currentMonth.value, "MMM-yyyy", new Date())
 );
@@ -33,21 +39,167 @@ const days = computed(() =>
 );
 
 const prevMonth = () => {
-  const firstDay = add(firstDayInCurrentMonth.value, { months: -1 });
-  currentMonth.value = format(firstDay, "MMM-yyyy");
+  const prevMonth = add(firstDayInCurrentMonth.value, { months: -1 });
+
+  selectedMonth.value = format(prevMonth, "MMM");
+  selectedYear.value = format(prevMonth, "yyyy");
 };
 
 const nextMonth = () => {
-  const firstDay = add(firstDayInCurrentMonth.value, { months: 1 });
-  currentMonth.value = format(firstDay, "MMM-yyyy");
+  const nextMonth = add(firstDayInCurrentMonth.value, { months: 1 });
+
+  selectedMonth.value = format(nextMonth, "MMM");
+  selectedYear.value = format(nextMonth, "yyyy");
+};
+
+const visible = reactive<{ monthDropdown: boolean; yearDropdown: boolean }>({
+  monthDropdown: false,
+  yearDropdown: false,
+});
+
+import { onClickOutside } from "@vueuse/core";
+
+const MonthDropdown = ({ modelValue }) => {
+  const { emit } = getCurrentInstance();
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const el = ref();
+  onClickOutside(el, () => emit("close"));
+
+  return h(
+    "div",
+    {
+      ref: el,
+      class:
+        "absolute top-2 w-16 border border-gray-300 bg-white shadow rounded-lg list-none",
+      "data-testid": "monthDropdown",
+    },
+    months.map((month, index) =>
+      h(
+        "li",
+        {
+          class: `py-1 bg-gray-100 text-center cursor-pointer select-none hover:bg-blue-50 ${
+            index == 0 ? "rounded-t-lg" : ""
+          } ${index == months.length - 1 ? "rounded-b-lg" : ""} ${
+            modelValue == month ? "bg-blue-100 text-blue-600" : ""
+          }`,
+          onClick: () => {
+            emit("update:modelValue", month);
+            emit("close");
+          },
+        },
+        month
+      )
+    )
+  );
+};
+
+const YearDropdown = ({ modelValue }) => {
+  const { emit } = getCurrentInstance();
+
+  const years = [2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014];
+
+  const el = ref();
+  onClickOutside(el, () => emit("close"));
+
+  return h(
+    "div",
+    {
+      ref: el,
+      class:
+        "absolute top-2 left-12 w-16 border border-gray-300 bg-white shadow rounded-lg list-none",
+      "data-testid": "yearDropdown",
+    },
+    years.map((year, index) =>
+      h(
+        "li",
+        {
+          class: `py-1 bg-gray-100 text-center cursor-pointer select-none hover:bg-blue-50 ${
+            index == 0 ? "rounded-t-lg" : ""
+          } ${index == years.length - 1 ? "rounded-b-lg" : ""} ${
+            modelValue == year ? "bg-blue-100 text-blue-600" : ""
+          }`,
+          onClick: () => {
+            emit("update:modelValue", year);
+            emit("close");
+          },
+        },
+        year
+      )
+    )
+  );
 };
 </script>
 
 <template>
-  <div class="w-[16rem] border border-gray-200">
+  <div class="relative w-[16rem] border border-gray-200 bg-white">
     <div class="flex items-center p-2">
-      <h2 class="flex-auto">
-        {{ format(firstDayInCurrentMonth, "MMM yyyy") }}
+      <month-dropdown
+        v-if="visible.monthDropdown"
+        @close="visible.monthDropdown = false"
+        v-model="selectedMonth"
+      />
+
+      <h2 class="flex-auto flex">
+        <span class="flex items-center">
+          {{ format(firstDayInCurrentMonth, "MMM") }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            data-testid="monthDropdownTrigger"
+            @click="visible.monthDropdown = !visible.monthDropdown"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </span>
+
+        <year-dropdown
+          v-if="visible.yearDropdown"
+          @close="visible.yearDropdown = false"
+          v-model="selectedYear"
+        />
+
+        <span class="flex items-center">
+          {{ format(firstDayInCurrentMonth, "yyyy") }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            data-testid="yearDropdownTrigger"
+            @click="visible.yearDropdown = !visible.yearDropdown"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </span>
       </h2>
       <button type="button" @click="prevMonth" data-testid="prevMonth">
         <span class="sr-only">Previous Month</span>

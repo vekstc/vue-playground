@@ -1,4 +1,4 @@
-import { shallowMount, VueWrapper } from "@vue/test-utils";
+import { shallowMount, mount, VueWrapper } from "@vue/test-utils";
 import { ComponentPublicInstance } from "vue";
 import Calendar from "./Calendar.vue";
 
@@ -39,6 +39,58 @@ describe("Calendar", () => {
   it("highlights current day", () => {
     const wrapper = createWrapper();
 
-    expect(wrapper.find(".text-blue-500").text()).toBeTruthy();
+    expect(wrapper.find(".text-blue-500").exists()).toBeTruthy();
+  });
+
+  it("changes month with dropdown", async () => {
+    const wrapper: VueWrapper<ComponentPublicInstance> = mount(Calendar);
+
+    const dropdown = wrapper.find('[data-testid="monthDropdownTrigger"]');
+
+    await dropdown.trigger("click");
+
+    const option = wrapper.findAll('[data-testid="monthDropdown"] > li');
+
+    await option[2].trigger("click");
+
+    expect(dropdown.exists()).toBeTruthy();
+
+    expect(wrapper.find("h2").text()).toContain("Mar");
+  });
+
+  it("highlights correct month in dropdown", async () => {
+    const wrapper: VueWrapper<ComponentPublicInstance> = mount(Calendar);
+
+    const dropdown = wrapper.find('[data-testid="monthDropdownTrigger"]');
+
+    await dropdown.trigger("click");
+
+    expect(wrapper.find(".bg-blue-100.text-blue-600").exists()).toBeTruthy();
+  });
+
+  it("changes year with dropdown", async () => {
+    const wrapper: VueWrapper<ComponentPublicInstance> = mount(Calendar);
+
+    const dropdown = wrapper.find('[data-testid="yearDropdownTrigger"]');
+
+    await dropdown.trigger("click");
+
+    const option = wrapper.findAll('[data-testid="yearDropdown"] > li');
+
+    await option[2].trigger("click");
+
+    expect(dropdown.exists()).toBeTruthy();
+
+    expect(wrapper.find("h2").text()).toContain("2021");
+  });
+
+  it("highlghts correct year in dropdown", async () => {
+    const wrapper: VueWrapper<ComponentPublicInstance> = mount(Calendar);
+
+    const dropdown = wrapper.find('[data-testid="yearDropdownTrigger"]');
+
+    await dropdown.trigger("click");
+
+    expect(wrapper.find(".bg-blue-100.text-blue-600").exists()).toBeTruthy();
   });
 });
