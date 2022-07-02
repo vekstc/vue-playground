@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, getCurrentInstance, ref, reactive, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 
 import {
   startOfToday,
@@ -16,10 +16,10 @@ import {
 
 const today = startOfToday();
 
-const selectedMonth = ref(format(today, "MMM"));
-const selectedYear = ref(format(today, "yyyy"));
+const selectedMonth = ref<string>(format(today, "MMM"));
+const selectedYear = ref<number>(parseInt(format(today, "yyyy")));
 
-const currentMonth = computed(
+const currentMonth = computed<string>(
   () => `${selectedMonth.value}-${selectedYear.value}`
 );
 
@@ -57,92 +57,8 @@ const visible = reactive<{ monthDropdown: boolean; yearDropdown: boolean }>({
   yearDropdown: false,
 });
 
-import { onClickOutside } from "@vueuse/core";
-
-const MonthDropdown = ({ modelValue }) => {
-  const { emit } = getCurrentInstance();
-
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const el = ref();
-  onClickOutside(el, () => emit("close"));
-
-  return h(
-    "div",
-    {
-      ref: el,
-      class:
-        "absolute top-2 w-16 border border-gray-300 bg-white shadow rounded-lg list-none",
-      "data-testid": "monthDropdown",
-    },
-    months.map((month, index) =>
-      h(
-        "li",
-        {
-          class: `py-1 bg-gray-100 text-center cursor-pointer select-none hover:bg-blue-50 ${
-            index == 0 ? "rounded-t-lg" : ""
-          } ${index == months.length - 1 ? "rounded-b-lg" : ""} ${
-            modelValue == month ? "bg-blue-100 text-blue-600" : ""
-          }`,
-          onClick: () => {
-            emit("update:modelValue", month);
-            emit("close");
-          },
-        },
-        month
-      )
-    )
-  );
-};
-
-const YearDropdown = ({ modelValue }) => {
-  const { emit } = getCurrentInstance();
-
-  const years = [2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014];
-
-  const el = ref();
-  onClickOutside(el, () => emit("close"));
-
-  return h(
-    "div",
-    {
-      ref: el,
-      class:
-        "absolute top-2 left-12 w-16 border border-gray-300 bg-white shadow rounded-lg list-none",
-      "data-testid": "yearDropdown",
-    },
-    years.map((year, index) =>
-      h(
-        "li",
-        {
-          class: `py-1 bg-gray-100 text-center cursor-pointer select-none hover:bg-blue-50 ${
-            index == 0 ? "rounded-t-lg" : ""
-          } ${index == years.length - 1 ? "rounded-b-lg" : ""} ${
-            modelValue == year ? "bg-blue-100 text-blue-600" : ""
-          }`,
-          onClick: () => {
-            emit("update:modelValue", year);
-            emit("close");
-          },
-        },
-        year
-      )
-    )
-  );
-};
+import MonthDropdown from "./MonthDropdown";
+import YearDropdown from "./YearDropdown";
 </script>
 
 <template>
@@ -178,7 +94,7 @@ const YearDropdown = ({ modelValue }) => {
         <year-dropdown
           v-if="visible.yearDropdown"
           @close="visible.yearDropdown = false"
-          v-model="selectedYear"
+          v-model.number="selectedYear"
         />
 
         <span class="flex items-center">
