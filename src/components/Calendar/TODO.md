@@ -14,16 +14,17 @@ Basic calendar component built for future projects
   - [x] Do previous month
   - [x] Do next month
 - [x] Highlight current day
-- [x] Add dropdown select month and year
+- [ ] Add dropdown select month and year
   - [x] Create select month dropdown
-  - [ ] Highlight selected & current month
+  - [x] Highlight selected & current month
   - [x] Create select year dropdown
-  - [ ] Highlight selected & current year
+  - [x] Highlight selected & current year
   - [x] Make them close on outside click
-  - [ ] Make dropdown options keyboard searchable
   - [ ] Make dropdown keyboard accessable
+  - [ ] Make dropdown options keyboard searchable
   - [ ] Improve screen reader accessability
 - [ ] Add select date option
   - [ ] Add single date
   - [ ] Add multiple date (range selection)
+- [ ] Add quick actions functionality
 - [ ] Improve design of calendar

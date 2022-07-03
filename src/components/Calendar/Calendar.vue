@@ -67,11 +67,19 @@ import YearDropdown from "./YearDropdown";
       <month-dropdown
         v-if="visible.monthDropdown"
         @close="visible.monthDropdown = false"
+        refocus="monthTrigger"
         v-model="selectedMonth"
       />
 
       <h2 class="flex-auto flex">
-        <span class="flex items-center">
+        <button
+          class="flex items-center focus:outline-none focus:bg-gray-100"
+          id="monthTrigger"
+          data-testid="monthDropdownTrigger"
+          @click="visible.monthDropdown = !visible.monthDropdown"
+          @keydown.up.prevent="visible.monthDropdown = true"
+          @keydown.down.prevent="visible.monthDropdown = true"
+        >
           {{ format(firstDayInCurrentMonth, "MMM") }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -80,8 +88,6 @@ import YearDropdown from "./YearDropdown";
             viewBox="0 0 24 24"
             stroke="currentColor"
             stroke-width="2"
-            data-testid="monthDropdownTrigger"
-            @click="visible.monthDropdown = !visible.monthDropdown"
           >
             <path
               stroke-linecap="round"
@@ -89,7 +95,7 @@ import YearDropdown from "./YearDropdown";
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </span>
+        </button>
 
         <year-dropdown
           v-if="visible.yearDropdown"
@@ -97,7 +103,7 @@ import YearDropdown from "./YearDropdown";
           v-model.number="selectedYear"
         />
 
-        <span class="flex items-center">
+        <button class="flex items-center">
           {{ format(firstDayInCurrentMonth, "yyyy") }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +121,7 @@ import YearDropdown from "./YearDropdown";
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </span>
+        </button>
       </h2>
       <button type="button" @click="prevMonth" data-testid="prevMonth">
         <span class="sr-only">Previous Month</span>
